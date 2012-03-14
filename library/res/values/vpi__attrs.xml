@@ -20,10 +20,10 @@
     <declare-styleable name="ViewPagerIndicator">
         <!-- Style of the circle indicator. -->
         <attr name="vpiCirclePageIndicatorStyle" format="reference"/>
-        
+
         <!-- Style of the title indicator. -->
         <attr name="vpiTitlePageIndicatorStyle" format="reference"/>
-        
+
         <!-- Style of the tab indicator. -->
         <attr name="vpiTabPageIndicatorStyle" format="reference"/>
         <!-- Style of the text in a tab. -->
@@ -53,14 +53,14 @@
         <!-- Width of the stroke used to draw the circles. -->
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
-    
+
     <declare-styleable name="IconPageIndicator" >
         <!-- Padding around icons -->
         <attr name="iconPadding" format="dimension" />
         <!-- Screen edge padding -->
         <attr name="iconSidePadding" format="dimension" />
         <!-- Footer color -->
-        <attr name="footerLineColor" format="dimension" />
+        <attr name="footerLineColor" format="color" />
         <!-- Footer Height -->
         <attr name="footerHeight" format="dimension" />
         <!-- Footer Line Top Padding -->

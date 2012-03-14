@@ -23,7 +23,7 @@ public interface IconProvider {
 	 * @param position
 	 * @return Integer array of length 3, left, center, and right icon.
 	 */
-	public int[] getIconArray(int child);
+	public int getIcon(int child);
 	/*
 	 * Sample implementation: public Integer[] getIcon(int child) { switch(i) {
 	 * case MAIN_ACTIVITY : Integer[] mainDrawables = {R.drawable.leftarrow,

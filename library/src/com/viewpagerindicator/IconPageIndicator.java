@@ -18,17 +18,10 @@
  */
 package com.viewpagerindicator;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
@@ -40,6 +33,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import java.util.ArrayList;
 
 public class IconPageIndicator extends View implements PageIndicator {
 
@@ -224,6 +218,7 @@ public class IconPageIndicator extends View implements PageIndicator {
 
 		if (mViewPager == null) {
 			return;
+
 		}
 		final int count = mViewPager.getAdapter().getCount();
 		if (count == 0) {
@@ -254,17 +249,19 @@ public class IconPageIndicator extends View implements PageIndicator {
 		float offsetPercent;
 		int leftAlpha = 155;
 		int rightAlpha = 155;
+
 		if (mCurrentOffset <= halfWidth) {
 			offsetPercent = 1.0f * mCurrentOffset / width;
 		} else {
 			page += 1;
 			offsetPercent = 1.0f * (width - mCurrentOffset) / width;
 		}
+
 		if (offsetPercent > SELECTION_FADE_PERCENTAGE) {
 			if (mCurrentOffset > halfWidth) {
-				leftAlpha = (int) ((.5 - offsetPercent) * 4 * 255);
+				leftAlpha = (int) ((.5 - offsetPercent) * 4 * 155);
 			} else if (mCurrentOffset < halfWidth) {
-				rightAlpha = (int) ((.5 - offsetPercent) * 4 * 255);
+				rightAlpha = (int) ((.5 - offsetPercent) * 4 * 155);
 			} else {
 				leftAlpha = 0;
 				rightAlpha = 0;
@@ -276,10 +273,12 @@ public class IconPageIndicator extends View implements PageIndicator {
 		//Verify if the current view must be clipped to the screen
 		RectF curPageBound = bounds.get(mCurrentPage); //current = center
 		float curPageWidth = curPageBound.right - curPageBound.left;
+
 		if (curPageBound.left < leftClip) {
 			//Try to clip to the screen (left side)
 			clipViewOnTheLeft(curPageBound, curPageWidth, left);
 		}
+
 		if (curPageBound.right > rightClip) {
 			//Try to clip to the screen (right side)
 			clipViewOnTheRight(curPageBound, curPageWidth, right);
@@ -304,6 +303,7 @@ public class IconPageIndicator extends View implements PageIndicator {
 				}
 			}
 		}
+
 		//Right views starting from the current position
 		if (mCurrentPage < countMinusOne) {
 			for (int i = mCurrentPage + 1; i < count; i++) {
@@ -327,43 +327,59 @@ public class IconPageIndicator extends View implements PageIndicator {
 		//Now draw views
 		Bitmap bitmap;
 		Resources res = getResources();
+
 		int leftIcon;
-		int rightIcon;
 		int centerIcon;
+		int rightIcon;
+
 		int colorTextAlpha = 255; //mColorText >>> 24;
+
 		for (int i = 0; i < count; i++) {
 			RectF bound = bounds.get(i); //find current page, do the +/-
+
 			//Only if one side is visible
 			if ((bound.left > left && bound.left < right) || (bound.right > left && bound.right < right)) {
 				final boolean currentPage = (i == page);
 
-				leftIcon = mIconProivder.getIconArray(i)[0];
-				centerIcon = mIconProivder.getIconArray(i)[1];
-				rightIcon = mIconProivder.getIconArray(i)[2];
+				leftIcon = mIconProivder.getIcon(i);
+				centerIcon = mIconProivder.getIcon(i);
+				rightIcon = mIconProivder.getIcon(i);
 
 				float trueHeight = getHeight() - mFooterPadding - mTopPadding;
 				float density = res.getDisplayMetrics().density;
 
 				if (i == (page - 1) && leftIcon != 0) { //left
 					mPaintIndicator.setAlpha(leftAlpha);
+
 					bitmap = BitmapFactory.decodeResource(res, leftIcon);
+
 					float change = trueHeight / bitmap.getHeight();
 					float trueWidth = bitmap.getWidth() * change;
+
 					bitmap = Bitmap.createScaledBitmap(bitmap, (int) trueWidth, (int) trueHeight, true);
+
 					canvas.drawBitmap(bitmap, bound.left, bound.top + (float) (mAboveIconPadding + (mSideIconVerticalShift * density)), mPaintIndicator);
 				} else if (currentPage && currentSelected && centerIcon != 0) { //center
 					mPaintIndicator.setAlpha((int) (colorTextAlpha * selectedPercent));
+
 					bitmap = BitmapFactory.decodeResource(res, centerIcon);
+
 					float change = trueHeight / bitmap.getHeight();
 					float trueWidth = bitmap.getWidth() * change;
+
 					bitmap = Bitmap.createScaledBitmap(bitmap, (int) trueWidth, (int) trueHeight, true);
+
 					canvas.drawBitmap(bitmap, bound.left, bound.top + (float) (mAboveIconPadding), mPaintIndicator);
 				} else if (i == (page + 1) && rightIcon != 0) { //right
 					mPaintIndicator.setAlpha(rightAlpha);
+
 					bitmap = BitmapFactory.decodeResource(res, rightIcon);
+
 					float change = trueHeight / bitmap.getHeight();
 					float trueWidth = bitmap.getWidth() * change;
+
 					bitmap = Bitmap.createScaledBitmap(bitmap, (int) trueWidth, (int) trueHeight, true);
+
 					canvas.drawBitmap(bitmap, bound.right - bitmap.getWidth(), bound.top + (float) (mAboveIconPadding + (mSideIconVerticalShift * density)), mPaintIndicator);
 				}
 			}
@@ -374,9 +390,11 @@ public class IconPageIndicator extends View implements PageIndicator {
 		mPath.moveTo(0, height - mFooterLineHeight / 2f);
 		mPath.lineTo(width, height - mFooterLineHeight / 2f);
 		mPath.close();
+
 		canvas.drawPath(mPath, mPaintFooterLine);
 	}
 
+	@Override
 	public boolean onTouchEvent(android.view.MotionEvent ev) {
 		if (super.onTouchEvent(ev)) {
 			return true;
@@ -510,27 +528,36 @@ public class IconPageIndicator extends View implements PageIndicator {
 	 */
 	private ArrayList<RectF> calculateAllBounds() {
 		ArrayList<RectF> list = new ArrayList<RectF>();
+
 		//For each views (If no values then add a fake one)
 		final int count = mViewPager.getAdapter().getCount();
 		final int width = getWidth();
 		final int halfWidth = width / 2;
+
 		for (int i = 0; i < count; i++) {
-			int icon = -1;
 			int actualPage = mViewPager.getCurrentItem();
-			if (i == actualPage) {
-				icon = 1;
-			} else if (i > actualPage) {
-				icon = 2;
-			} else if (i < actualPage) {
-				icon = 0;
+			int icon = i;
+
+			if (icon > actualPage) {
+				icon = icon + 1;
+			} else if (icon < actualPage) {
+				icon = icon - 1;
 			}
-			RectF bounds = calcBounds(i, icon);
+
+			if (icon < 0 || icon > count) { // out of bounds
+				icon = -1;
+			}
+
+			RectF bounds = calcBounds(icon);
+
 			float w = (bounds.right - bounds.left);
 			float h = (bounds.bottom - bounds.top);
-			bounds.left = (halfWidth) - (w / 2) - mCurrentOffset + ((i - mCurrentPage) * width);
+
+			bounds.left = (halfWidth) - (w / 2) - mCurrentOffset + ((icon - mCurrentPage) * width);
 			bounds.right = bounds.left + w;
 			bounds.top = 0;
 			bounds.bottom = h;
+
 			list.add(bounds);
 		}
 
@@ -544,10 +571,14 @@ public class IconPageIndicator extends View implements PageIndicator {
 	 * @param paint
 	 * @return
 	 */
-	private RectF calcBounds(int index, int icon) {
+	private RectF calcBounds(int index) {
 		//Calculate the text bounds
 		RectF bounds = new RectF();
-		int ic = mIconProivder.getIconArray(index)[icon];
+
+		int ic = 0;
+		if (index  > -1) {
+			ic = mIconProivder.getIcon(index);
+		}
 
 		if (ic != 0) {
 			Bitmap bitmap = BitmapFactory.decodeResource(getResources(), ic);
@@ -652,7 +683,7 @@ public class IconPageIndicator extends View implements PageIndicator {
 		final int measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
 
 		//Determine our height
-		float height = 0;
+		float height;
 		final int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
 		if (heightSpecMode == MeasureSpec.EXACTLY) {
 			//We were told how big to be

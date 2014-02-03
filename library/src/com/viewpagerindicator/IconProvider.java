@@ -16,30 +16,24 @@
 package com.viewpagerindicator;
 
 public interface IconProvider {
-	
+
 	/**
 	 * Gets an resource Integer array for icons
+	 *
 	 * @param position
 	 * @return Integer array of length 3, left, center, and right icon.
 	 */
-	public Integer[] getIconArray(int child);
-	
+	public int getIcon(int child);
 	/*
-	 *Sample implementation: 
-	 *public Integer[] getIcon(int child) {
-	 * switch(i) {
-	 *		case MAIN_ACTIVITY :
-	 *			Integer[] mainDrawables = {R.drawable.leftarrow, R.drawable.main_logo, R.drawable.rightarrow};
-	 *			return mainDrawables;
-	 *		case SETTINGS_ACTIVITY :
-	 *			Integer[] settingsDrawables = {R.drawable.settings_icon, R.drawable.settings_logo, R.drawable.settings_icon};
-	 *			return settingsDrawables;
-	 *		case FRIEND_LIST_ACTIVITY :
-	 *			Integer[] friendDrawables = {R.drawable.friends_icon, R.drawable.friends_logo, R.drawable.friends_icon};
-	 *			return friendDrawables;
-	 *		default :
-	 *			throw new IllegalArgumentException("Page does not exist");
-	 *		}
-	 *}
+	 * Sample implementation: public Integer[] getIcon(int child) { switch(i) {
+	 * case MAIN_ACTIVITY : Integer[] mainDrawables = {R.drawable.leftarrow,
+	 * R.drawable.main_logo, R.drawable.rightarrow}; return mainDrawables; case
+	 * SETTINGS_ACTIVITY : Integer[] settingsDrawables =
+	 * {R.drawable.settings_icon, R.drawable.settings_logo,
+	 * R.drawable.settings_icon}; return settingsDrawables; case
+	 * FRIEND_LIST_ACTIVITY : Integer[] friendDrawables =
+	 * {R.drawable.friends_icon, R.drawable.friends_logo,
+	 * R.drawable.friends_icon}; return friendDrawables; default : throw new
+	 * IllegalArgumentException("Page does not exist"); } }
 	 */
 }
